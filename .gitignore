@@ -33,4 +33,4 @@ vignettes/*.pdf
 *.knit.md
 
 # Datasets
-*.csv
+/*.csv
