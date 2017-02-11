@@ -70,13 +70,4 @@ plt2<- ggplot(data=train.dat, aes(x=Petal.Length, y=Sepal.Length, colour=Species
 
 grid.arrange(plt1, plt2)
 
-# specify columns and run amelia
-?amelia
-amelia_fit <- amelia(dat, m=5, parallel = "multicore", noms = "Species")
-
-iris.imputation1 <- amelia_fit$imputations[[1]]
-iris.imputation1[1:4] <- round(iris.imputation1[1:4], digits = 1)
-
-dat <- iris.imputation1
-
 
