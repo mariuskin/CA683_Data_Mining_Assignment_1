@@ -19,6 +19,7 @@ library(Amelia)
 summary(dat)
 
 # specify columns and run amelia
+
 ?amelia
 amelia_fit <- amelia(dat, m=5, parallel = "multicore", noms = "Species")
 
@@ -26,6 +27,13 @@ iris.imputation1 <- amelia_fit$imputations[[1]]
 iris.imputation1[1:4] <- round(iris.imputation1[1:4], digits = 1)
 
 dat <- iris.imputation1
+
+dat.X <- dat[1:4]
+dat.y <- dat[5]
+
+dat.X
+dat.y
+
 
 summary(dat)
 
@@ -49,7 +57,7 @@ train.y <- dat[index.dat, 5]
 test.X <- dat[-index.dat, 1:4]
 test.y <- dat[-index.dat, 5]
 
-summary(train.dat)
+summary(train.X)
 
 # analyze relationships between variables
 ggpairs(train.dat, aes(colour=Species), title="Iris Feature  Relationships") + theme(plot.title = element_text(size=30, face='bold'))
@@ -99,7 +107,7 @@ pred.model.lda <- predict(model.lda, newdata=test.dat, type='class')
 
 pred.model.lda$class
 test.y
-
+pred.model.lda
 
 # prediction table
 table(pred.model.lda$class, test.y)
@@ -130,4 +138,25 @@ ggplot(data=dataset.lda, aes(x=lda.x.LD1, y=lda.x.LD2, colour=Species)) +
         axis.title.x = element_text(size=16, face='bold'),
         axis.title.y = element_text(size=16, face='bold'))
 
+# K-Mean
 
+results.kmean1 <- kmeans(dat.X, 3)
+results.kmean2 <- kmeans(dat.X, 3)
+results.kmean3 <- kmeans(dat.X, 3)
+?kmeans()
+results.kmean
+results.kmean.cluster1 <- results.kmean1$cluster
+results.kmean.cluster2 <- results.kmean2$cluster
+results.kmean.cluster3 <- results.kmean3$cluster
+
+# prediction table
+table(dat.y$Species, results.kmean.cluster1)
+table(dat.y$Species, results.kmean.cluster2)
+table(dat.y$Species, results.kmean.cluster3)
+
+# accuracy of predictions
+
+(50+48+36)/(150)
+(48+36+50)/150
+
+plot(dat, col = results.kmean.cluster1)
