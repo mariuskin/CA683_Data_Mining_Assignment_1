@@ -7,6 +7,9 @@ install.packages("dplyr")
 install.packages("gridExtra")
 install.packages("MASS")
 install.packages("Amelia")
+install.packages("e1071")
+install.packages("randomForest")
+
 
 library(ggplot2)
 library(GGally)
@@ -15,6 +18,8 @@ library(dplyr)
 library(gridExtra)
 library(MASS)
 library(Amelia)
+library(e1071)
+library(randomForest)
 
 summary(dat)
 
@@ -156,7 +161,50 @@ table(dat.y$Species, results.kmean.cluster3)
 
 # accuracy of predictions
 
-(50+48+36)/(150)
+kmeans.accuracy<-(50+48+36)/(150)
 (48+36+50)/150
 
 plot(dat, col = results.kmean.cluster1)
+
+
+# SVM Model
+
+# build model with train X & y
+model.svm <- best.svm(Species ~ ., data=train.dat)
+
+# summarize model
+model.svm
+
+# visualize model
+plot(model.svm, data=train.dat, Petal.Width ~ Petal.Length, slice=list(Sepal.Width=3,Sepal.Length=4))
+
+# prediction model
+pred.model.svm <- predict(model.svm, test.X, type="class")
+
+# distribution of predictions
+table(pred.model.svm, test.y)
+
+# accuracy of predictions
+svm.accuracy <- sum(pred.model.svm == test.y)/length(pred.model.svm)
+svm.accuracy
+
+# Random Forest
+
+# build model
+model.rf <- randomForest(Species ~ ., data = train.dat, proximity=T, ntree = 200, mtry = 2, nodesize = 1, importance = T) 
+
+# visualize model
+plot(model.rf, log='y')
+
+MDSplot(model.rf, train.y)
+?MDSplot
+
+# predict
+pred.model.rf <- predict(model.rf, test.dat)
+table(pred.model.rf, test.y)
+
+rf.accuracy <- sum(pred.model.rf == test.y)/length(pred.model.rf)
+rf.accuracy
+
+compare.models <- data.frame(c(LDA=lda.accuracy,Kmeans = kmeans.accuracy, SVM=svm.accuracy, RF=rf.accuracy))
+compare.models
