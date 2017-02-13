@@ -65,7 +65,7 @@ test.y <- dat[-index.dat, 5]
 summary(train.X)
 
 # analyze relationships between variables
-ggpairs(train.dat, aes(colour=Species), title="Iris Feature  Relationships") + theme(plot.title = element_text(size=30, face='bold'))
+ggpairs(train.dat, aes(colour=Species), title="Iris Feature  Relationships\nTraining sample (75% of Total population)") + theme(plot.title = element_text(size=30, face='bold'))
 
 
 
@@ -137,7 +137,7 @@ ggplot(data=dataset.lda, aes(x=lda.x.LD1, y=lda.x.LD2, colour=Species)) +
   xlab(paste("LD1 (", percent(prop.model.lda[1]), ")", sep="")) +
   ylab(paste("LD2 (", percent(prop.model.lda[2]), ")", sep="")) +
   ggtitle("Linear Discriminant Analysis") +
-  scale_color_manual(values=c('#9933CC','#00CC00','#FFCC00')) +
+  scale_color_manual(values=c('#7F74FC','#FC74AD','#74FCC3')) +
   
   theme(plot.title = element_text(size=32, face='bold'),
         axis.title.x = element_text(size=16, face='bold'),
@@ -206,5 +206,23 @@ table(pred.model.rf, test.y)
 rf.accuracy <- sum(pred.model.rf == test.y)/length(pred.model.rf)
 rf.accuracy
 
-compare.models <- data.frame(c(LDA=lda.accuracy,Kmeans = kmeans.accuracy, SVM=svm.accuracy, RF=rf.accuracy))
+knn.accuracy <- 0.975
+
+compare.models <- data.frame(c(LDA=lda.accuracy,Kmeans = kmeans.accuracy, SVM=svm.accuracy, RF=rf.accuracy, KNN = knn.accuracy))
 compare.models
+
+test.X
+
+
+algo <- function(x1, x2, x3, x4) {
+  
+  Sepal.Length = c(x1) 
+  Sepal.Width = c(x2) 
+  Petal.Length = c(x3) 
+  Petal.Width = c(x4) 
+  df = data.frame(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) 
+  return(predict(model.lda, newdata = df, type='class')[2])
+}
+
+algo(3,5,5,1)
+
