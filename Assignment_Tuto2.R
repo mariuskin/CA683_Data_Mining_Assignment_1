@@ -224,5 +224,5 @@ algo <- function(x1, x2, x3, x4) {
   return(predict(model.lda, newdata = df, type='class')[2])
 }
 
-algo(3,5,5,1)
+algo(5.4,3.7,1.5,0.4)
 
